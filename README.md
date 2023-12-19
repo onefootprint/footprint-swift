@@ -37,8 +37,8 @@ import FootprintSwift
 let config = FootprintConfiguration(
     publicKey: "yourPublicKey",
     scheme: "yourScheme",
-    onClose: {
-        // Handle closure
+    onCancel: {
+        // Handle dismiss
     },
     onComplete: { validationToken in
         // Handle completion with validation token

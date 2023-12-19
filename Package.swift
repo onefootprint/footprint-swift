@@ -12,5 +12,8 @@ let package = Package(
     targets: [
         .target(
             name: "FootprintSwift"),
+        .testTarget(
+            name: "FootprintSwiftTests",
+            dependencies: ["FootprintSwift"]),
     ]
 )
