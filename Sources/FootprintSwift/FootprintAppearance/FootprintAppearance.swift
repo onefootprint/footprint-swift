@@ -1,18 +1,15 @@
 import Foundation
 
 public struct FootprintAppearance {
-    var theme: FootprintAppearanceTheme?
     var fontSrc: String?
     var rules: FootprintAppearanceRules?
     var variables: FootprintAppearanceVariables?
     
     public init(
-        theme: FootprintAppearanceTheme? = nil,
         fontSrc: String? = nil,
         rules: FootprintAppearanceRules? = nil,
         variables: FootprintAppearanceVariables? = nil
     ) {
-        self.theme = theme
         self.fontSrc = fontSrc
         self.rules = rules
         self.variables = variables
@@ -29,7 +26,7 @@ public struct FootprintAppearance {
         if value == nil {
             return ""
         }
-        
+
         let encoder = JSONEncoder()
         let encoded = try encoder.encode(value)
         let json = try JSONSerialization.jsonObject(with: encoded, options: [])
