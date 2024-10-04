@@ -53,7 +53,7 @@ Footprint.initialize(with: config)
 
 After the initialization, a Webview will appear, and it will take the users through the regular flow, as defined on the playbook
 
-## Onboarding components (new)
+## Onboarding components (beta)
 
 With this approach, you have more control over the flow and how to present the UI for the users 
 
