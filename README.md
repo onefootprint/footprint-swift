@@ -27,6 +27,13 @@ let package = Package(
 )
 ```
 
+### CocoaPods
+To integrate FootprintSwift into your Xcode project using CocoaPods, specify it in your Podfile:
+
+```
+ pod 'FootprintSwift'
+ ```
+
 ## Usage
 
 There are two ways to utilize FootprintSwift:
