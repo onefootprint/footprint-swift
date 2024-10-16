@@ -83,45 +83,45 @@ public struct RequirementAttributes {
 
 let CdoToAllDisMap: [String: [VaultDI]] = [
     CollectedAttributes.name.rawValue: [
-        VaultDI(rawValue: Vaultprops.CodingKeys.idFirstName.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idMiddleName.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idLastName.rawValue)!
+        VaultDI(rawValue: VaultData.CodingKeys.idFirstName.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idMiddleName.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idLastName.rawValue)!
     ],
-    CollectedAttributes.dob.rawValue: [VaultDI(rawValue: Vaultprops.CodingKeys.idDob.rawValue)!],
-    CollectedAttributes.ssn4.rawValue: [VaultDI(rawValue: Vaultprops.CodingKeys.idSsn4.rawValue)!],
-    CollectedAttributes.ssn9.rawValue: [VaultDI(rawValue: Vaultprops.CodingKeys.idSsn9.rawValue)!],
-    CollectedAttributes.usTaxId.rawValue: [VaultDI(rawValue: Vaultprops.CodingKeys.idUsTaxId.rawValue)!],
+    CollectedAttributes.dob.rawValue: [VaultDI(rawValue: VaultData.CodingKeys.idDob.rawValue)!],
+    CollectedAttributes.ssn4.rawValue: [VaultDI(rawValue: VaultData.CodingKeys.idSsn4.rawValue)!],
+    CollectedAttributes.ssn9.rawValue: [VaultDI(rawValue: VaultData.CodingKeys.idSsn9.rawValue)!],
+    CollectedAttributes.usTaxId.rawValue: [VaultDI(rawValue: VaultData.CodingKeys.idUsTaxId.rawValue)!],
     CollectedAttributes.fullAddress.rawValue: [
-        VaultDI(rawValue: Vaultprops.CodingKeys.idAddressLine1.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idAddressLine2.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idCity.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idState.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idZip.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idCountry.rawValue)!
+        VaultDI(rawValue: VaultData.CodingKeys.idAddressLine1.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idAddressLine2.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idCity.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idState.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idZip.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idCountry.rawValue)!
     ],
-    CollectedAttributes.email.rawValue: [VaultDI(rawValue: Vaultprops.CodingKeys.idEmail.rawValue)!],
-    CollectedAttributes.phoneNumber.rawValue: [VaultDI(rawValue: Vaultprops.CodingKeys.idPhoneNumber.rawValue)!],
-    CollectedAttributes.nationality.rawValue: [VaultDI(rawValue: Vaultprops.CodingKeys.idNationality.rawValue)!],
+    CollectedAttributes.email.rawValue: [VaultDI(rawValue: VaultData.CodingKeys.idEmail.rawValue)!],
+    CollectedAttributes.phoneNumber.rawValue: [VaultDI(rawValue: VaultData.CodingKeys.idPhoneNumber.rawValue)!],
+    CollectedAttributes.nationality.rawValue: [VaultDI(rawValue: VaultData.CodingKeys.idNationality.rawValue)!],
     CollectedAttributes.usLegalStatus.rawValue: [
-        VaultDI(rawValue: Vaultprops.CodingKeys.idUsLegalStatus.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idVisaKind.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idVisaExpirationDate.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idCitizenships.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.idNationality.rawValue)!
+        VaultDI(rawValue: VaultData.CodingKeys.idUsLegalStatus.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idVisaKind.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idVisaExpirationDate.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idCitizenships.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.idNationality.rawValue)!
     ],
     CollectedAttributes.investorProfile.rawValue: [
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileEmploymentStatus.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileOccupation.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileEmployer.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileAnnualIncome.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileNetWorth.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileInvestmentGoals.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileRiskTolerance.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileDeclarations.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileBrokerageFirmEmployer.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileSeniorExecutiveSymbols.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileFamilyMemberNames.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfilePoliticalOrganization.rawValue)!,
-        VaultDI(rawValue: Vaultprops.CodingKeys.investorProfileFundingSources.rawValue)!
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileEmploymentStatus.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileOccupation.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileEmployer.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileAnnualIncome.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileNetWorth.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileInvestmentGoals.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileRiskTolerance.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileDeclarations.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileBrokerageFirmEmployer.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileSeniorExecutiveSymbols.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileFamilyMemberNames.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfilePoliticalOrganization.rawValue)!,
+        VaultDI(rawValue: VaultData.CodingKeys.investorProfileFundingSources.rawValue)!
     ]
 ]

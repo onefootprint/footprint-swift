@@ -11,6 +11,9 @@ if [ ! -f "$SPEC_FILE" ]; then
     exit 1
 fi
 
+# Clean up
+rm -rf $FINAL_DIR
+
 # Generate Swift code
 docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
     -i /local/$SPEC_FILE \

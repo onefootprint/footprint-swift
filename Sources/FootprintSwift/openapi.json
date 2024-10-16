@@ -5496,7 +5496,7 @@
         ]
       },
       "RawUserDataRequest": {
-        "$ref": "#/components/schemas/Vaultprops"
+        "$ref": "#/components/schemas/VaultData"
       },
       "SdkArgs": {
         "type": "string"
@@ -5794,8 +5794,8 @@
       "UserDecryptResponse": {
         "$ref": "#/components/schemas/RawUserDataRequest"
       },
-      "Vaultprops": {
-        "title": "VaultProps",
+      "VaultData": {
+        "title": "VaultData",
         "x-stoplight": {
           "id": "uq84qpudiffq1"
         },
@@ -5995,7 +5995,7 @@
             "type": "object",
             "properties": {
               "context": {
-                "$ref": "#/components/schemas/Vaultprops"
+                "$ref": "#/components/schemas/VaultData"
               }
             }
           },

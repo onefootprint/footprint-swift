@@ -16,7 +16,7 @@ open class IdentifyAPI {
      - returns: KbaResponse
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func hostedIdentifyKbaPost(body: Vaultprops, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> KbaResponse {
+    open class func hostedIdentifyKbaPost(body: VaultData, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> KbaResponse {
         return try await hostedIdentifyKbaPostWithRequestBuilder(body: body, openAPIClient: openAPIClient).execute().body
     }
 
@@ -30,7 +30,7 @@ open class IdentifyAPI {
      - parameter openAPIClient: The OpenAPIClient that contains the configuration for the http request.
      - returns: RequestBuilder<KbaResponse> 
      */
-    open class func hostedIdentifyKbaPostWithRequestBuilder(body: Vaultprops, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<KbaResponse> {
+    open class func hostedIdentifyKbaPostWithRequestBuilder(body: VaultData, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<KbaResponse> {
         let localVariablePath = "/hosted/identify/kba"
         let localVariableURLString = openAPIClient.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: body, codableHelper: openAPIClient.codableHelper)

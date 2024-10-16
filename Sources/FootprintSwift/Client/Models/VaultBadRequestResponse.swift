@@ -13,9 +13,9 @@ public struct VaultBadRequestResponse: Codable, JSONEncodable, Hashable {
     public var debug: String
     public var message: String
     public var supportId: String
-    public var context: Vaultprops?
+    public var context: VaultData?
 
-    public init(code: String? = nil, debug: String, message: String, supportId: String, context: Vaultprops? = nil) {
+    public init(code: String? = nil, debug: String, message: String, supportId: String, context: VaultData? = nil) {
         self.code = code
         self.debug = debug
         self.message = message

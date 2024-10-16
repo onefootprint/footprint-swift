@@ -14,10 +14,10 @@ open class UserAPI {
      - parameter xFpAuthorization: (header)  
      - parameter userDecryptRequest: (body)  
      - parameter openAPIClient: The OpenAPIClient that contains the configuration for the http request.
-     - returns: Vaultprops
+     - returns: VaultData
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func decryptUserVault_0(xFpAuthorization: String, userDecryptRequest: UserDecryptRequest, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> Vaultprops {
+    open class func decryptUserVault_0(xFpAuthorization: String, userDecryptRequest: UserDecryptRequest, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> VaultData {
         return try await decryptUserVault_0WithRequestBuilder(xFpAuthorization: xFpAuthorization, userDecryptRequest: userDecryptRequest, openAPIClient: openAPIClient).execute().body
     }
 
@@ -30,9 +30,9 @@ open class UserAPI {
      - parameter xFpAuthorization: (header)  
      - parameter userDecryptRequest: (body)  
      - parameter openAPIClient: The OpenAPIClient that contains the configuration for the http request.
-     - returns: RequestBuilder<Vaultprops> 
+     - returns: RequestBuilder<VaultData> 
      */
-    open class func decryptUserVault_0WithRequestBuilder(xFpAuthorization: String, userDecryptRequest: UserDecryptRequest, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<Vaultprops> {
+    open class func decryptUserVault_0WithRequestBuilder(xFpAuthorization: String, userDecryptRequest: UserDecryptRequest, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<VaultData> {
         let localVariablePath = "/hosted/user/vault/decrypt"
         let localVariableURLString = openAPIClient.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: userDecryptRequest, codableHelper: openAPIClient.codableHelper)
@@ -46,7 +46,7 @@ open class UserAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Vaultprops>.Type = openAPIClient.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<VaultData>.Type = openAPIClient.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true, openAPIClient: openAPIClient)
     }

@@ -14,10 +14,10 @@ open class VaultAPI {
      - parameter xFpAuthorization: (header)  
      - parameter userDecryptRequest: (body)  
      - parameter openAPIClient: The OpenAPIClient that contains the configuration for the http request.
-     - returns: Vaultprops
+     - returns: VaultData
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func decryptUserVault(xFpAuthorization: String, userDecryptRequest: UserDecryptRequest, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> Vaultprops {
+    open class func decryptUserVault(xFpAuthorization: String, userDecryptRequest: UserDecryptRequest, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> VaultData {
         return try await decryptUserVaultWithRequestBuilder(xFpAuthorization: xFpAuthorization, userDecryptRequest: userDecryptRequest, openAPIClient: openAPIClient).execute().body
     }
 
@@ -30,9 +30,9 @@ open class VaultAPI {
      - parameter xFpAuthorization: (header)  
      - parameter userDecryptRequest: (body)  
      - parameter openAPIClient: The OpenAPIClient that contains the configuration for the http request.
-     - returns: RequestBuilder<Vaultprops> 
+     - returns: RequestBuilder<VaultData> 
      */
-    open class func decryptUserVaultWithRequestBuilder(xFpAuthorization: String, userDecryptRequest: UserDecryptRequest, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<Vaultprops> {
+    open class func decryptUserVaultWithRequestBuilder(xFpAuthorization: String, userDecryptRequest: UserDecryptRequest, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<VaultData> {
         let localVariablePath = "/hosted/user/vault/decrypt"
         let localVariableURLString = openAPIClient.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: userDecryptRequest, codableHelper: openAPIClient.codableHelper)
@@ -46,7 +46,7 @@ open class VaultAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<Vaultprops>.Type = openAPIClient.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<VaultData>.Type = openAPIClient.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: true, openAPIClient: openAPIClient)
     }
@@ -175,7 +175,7 @@ open class VaultAPI {
      - returns: JSONValue
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func hostedUserVaultValidatePost(body: Vaultprops, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> JSONValue {
+    open class func hostedUserVaultValidatePost(body: VaultData, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> JSONValue {
         return try await hostedUserVaultValidatePostWithRequestBuilder(body: body, openAPIClient: openAPIClient).execute().body
     }
 
@@ -189,7 +189,7 @@ open class VaultAPI {
      - parameter openAPIClient: The OpenAPIClient that contains the configuration for the http request.
      - returns: RequestBuilder<JSONValue> 
      */
-    open class func hostedUserVaultValidatePostWithRequestBuilder(body: Vaultprops, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<JSONValue> {
+    open class func hostedUserVaultValidatePostWithRequestBuilder(body: VaultData, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<JSONValue> {
         let localVariablePath = "/hosted/user/vault/validate"
         let localVariableURLString = openAPIClient.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: body, codableHelper: openAPIClient.codableHelper)
@@ -215,7 +215,7 @@ open class VaultAPI {
      - returns: JSONValue
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    open class func vault(xFpAuthorization: String, body: Vaultprops, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> JSONValue {
+    open class func vault(xFpAuthorization: String, body: VaultData, openAPIClient: OpenAPIClient = OpenAPIClient.shared) async throws(ErrorResponse) -> JSONValue {
         return try await vaultWithRequestBuilder(xFpAuthorization: xFpAuthorization, body: body, openAPIClient: openAPIClient).execute().body
     }
 
@@ -230,7 +230,7 @@ open class VaultAPI {
      - parameter openAPIClient: The OpenAPIClient that contains the configuration for the http request.
      - returns: RequestBuilder<JSONValue> 
      */
-    open class func vaultWithRequestBuilder(xFpAuthorization: String, body: Vaultprops, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<JSONValue> {
+    open class func vaultWithRequestBuilder(xFpAuthorization: String, body: VaultData, openAPIClient: OpenAPIClient = OpenAPIClient.shared) -> RequestBuilder<JSONValue> {
         let localVariablePath = "/hosted/user/vault"
         let localVariableURLString = openAPIClient.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: body, codableHelper: openAPIClient.codableHelper)
