@@ -1,61 +1,90 @@
 import SwiftUI
 
 public struct FpInput: View {
-    let placeholder: String
-    let keyboardType: UIKeyboardType
-    let isSecure: Bool
-    let contentType: UITextContentType?
+    var placeholder: String?
     @EnvironmentObject var form: FormManager
-    @Environment(\.fpFieldName) var fpFieldName: VaultDI?
+    @EnvironmentObject var fieldManager: FieldManager
+    var asCustomTextField: ((_ binding: Binding<String>, _ handleChange: @escaping (String) -> Void) -> AnyView)?
     
+    // Initializer for custom text field
     public init(
-        placeholder: String,
-        keyboardType: UIKeyboardType = .default,
-        isSecure: Bool = false,
-        contentType: UITextContentType? = nil
+        asCustomTextField: @escaping (_ binding: Binding<String>, _ handleChange: @escaping (String) -> Void) -> AnyView
     ) {
+        self.asCustomTextField = asCustomTextField
+    }
+    
+    // Initializer for default TextField
+    public init(placeholder: String? = nil) {
         self.placeholder = placeholder
-        self.keyboardType = keyboardType
-        self.isSecure = isSecure
-        self.contentType = contentType
+        self.asCustomTextField = nil // No custom text field provided
     }
     
     public var body: some View {
+        var fpInputProps: FootprintInputProps = .init()
+        if let fieldName = fieldManager.name {
+            fpInputProps = getInputProps(fieldName: fieldName)
+            form.addToFieldsUsed(fieldName)
+        }
+        
         let binding = Binding<String>(
             get: {
-                if let fieldName = fpFieldName {
-                    switch fieldName {
-                    case .idPeriodEmail:
-                        return form.idEmail
-                    case .idPeriodPhoneNumber:
-                        return form.idPhoneNumber
-                    default:
-                        return ""
-                    }
-                }
-                return ""
+                guard let fieldName = fieldManager.name else { return "" }
+                return form.getValueByFieldName(fieldName) ?? ""
             },
             set: { newValue in
-                if let fieldName = fpFieldName {
-                    print("Setting new value: \(newValue) in \(fieldName)")
-                    
-                    switch fieldName {
-                    case .idPeriodEmail:
-                        form.setValue(newValue, forKey: "idEmail")
-                    case .idPeriodPhoneNumber:
-                        form.setValue(newValue, forKey: "idPhoneNumber")
-                    default:
-                        break
-                    }
-                }
+                guard let fieldName = fieldManager.name else { return }
+                form.setValueByFieldName(newValue, forField: fieldName)
             }
         )
         
-        return TextField(placeholder, text: binding)
-            .keyboardType(keyboardType)
-            .textContentType(contentType)
-            .onAppear {
-                print("FpInput: fpFieldName =", fpFieldName ?? "nil")
+        let handleTextChange: (String) -> Void = { newValue in
+            guard let fieldName = fieldManager.name else { return }
+            var refinedValue = newValue
+            if let format = fpInputProps.format, !refinedValue.isEmpty {
+                refinedValue = format(refinedValue)
             }
+            if let maxLengthLimit = fpInputProps.maxLength {
+                refinedValue = String(refinedValue.prefix(maxLengthLimit))
+            }
+            binding.wrappedValue = refinedValue
+        }
+        
+        return Group {
+            if let customTextField = asCustomTextField {
+                customTextField(binding, handleTextChange)
+                    .keyboardType(fpInputProps.keyboardType ?? .default)
+                    .textContentType(fpInputProps.textContentType)
+                    .autocapitalization(fpInputProps.autocapitalization ?? .sentences)
+            } else {
+                TextField(placeholder ?? "", text: binding)
+                    .keyboardType(fpInputProps.keyboardType ?? .default)
+                    .textContentType(fpInputProps.textContentType)
+                    .autocapitalization(fpInputProps.autocapitalization ?? .sentences)
+                    .onChange(of: binding.wrappedValue){ newValue in
+                        handleTextChange(newValue)
+                    }
+            }
+        }
+        
+        .onAppear(perform: UIApplication.shared.addTapGestureRecognizer)
+    }
+}
+
+
+// Extension to add a tap gesture recognizer for dismissing the keyboard
+extension UIApplication {
+    func addTapGestureRecognizer() {
+        guard let window = windows.first else { return }
+        let tapGesture = UITapGestureRecognizer(target: window, action: #selector(UIView.endEditing))
+        tapGesture.requiresExclusiveTouchType = false
+        tapGesture.cancelsTouchesInView = false
+        tapGesture.delegate = self
+        window.addGestureRecognizer(tapGesture)
+    }
+}
+
+extension UIApplication: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
     }
 }

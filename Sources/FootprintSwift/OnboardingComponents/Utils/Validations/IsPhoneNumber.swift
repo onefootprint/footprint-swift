@@ -206,6 +206,22 @@ struct PhoneNumberValidator {
         return false
     }
     
+    static func isPhoneNumberGeneric(_ value: String, translation: Translation?) -> String?  {
+        if value.isEmpty {
+            return translation?.phone?.required ?? "Phone number is required"
+        }
+        
+        let phoneNumberRegex = "^\\+[1-9]\\d{1,14}$" // E.164 format with mandatory leading '+'
+        let predicate = NSPredicate(format: "SELF MATCHES %@", phoneNumberRegex)
+        let isValid = predicate.evaluate(with: value)
+        
+        if !isValid {
+            return translation?.phone?.invalid ?? "Phone number is not valid"
+        }
+        
+        return nil
+    }
+    
     static var locales: [String] {
         return Array(phones.keys)
     }

@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 public final class FootprintProvider {
     private var client: OpenAPIClient
@@ -16,7 +17,10 @@ public final class FootprintProvider {
     private var requirements : RequirementAttributes?
     private var sandboxId: String?  = nil
     private var sandboxOutcome: SandboxOutcome?
-    private var l10n: FootprintL10n?
+    internal var l10n: FootprintL10n = .init(
+        locale: .enUS,
+        language: .english
+    )
     private var appearance: FootprintAppearance?
     private(set) var isReady: Bool
     
@@ -40,13 +44,21 @@ public final class FootprintProvider {
                            l10n: FootprintL10n? = nil,
                            appearance: FootprintAppearance? = nil
     ) async throws {
-        self.l10n = l10n
+        if let l10n {
+            self.l10n = l10n
+        }
+        
         self.appearance = appearance
         self.configKey = configKey
         self.authToken = authToken
         self.sandboxOutcome = sandboxOutcome
+        let packageInfo = PackageInfo.getCurrentPackageInfo()
+        self.client.customHeaders = [
+            "x-fp-client-version": "footprint-swift-\(packageInfo.installationType):\(packageInfo.version ?? "unknown")",
+        ]
         self.queries = FootprintQueries(client: self.client, configKey: self.configKey)
         self.onboardingConfig  = try await self.queries.getOnboardingConfig()
+        
         if(self.onboardingConfig != nil){
             self.isReady = true
         }
@@ -144,6 +156,8 @@ public final class FootprintProvider {
         let vaultData = try await getVaultData()
         self.vaultData = vaultData
         
+        self.vaultingToken = (try await self.queries.createVaultingToken(authToken: updatedAuthToken)).token
+        
         self.authTokenStatus = .validWithSufficientScope
         return AuthTokenStatus.validWithSufficientScope
         
@@ -199,7 +213,7 @@ public final class FootprintProvider {
         return try tokenStatusToRequiresAuthResult(tokenStatus: authTokenStatus)
     }
     
-    func createChallenge(email: String? = nil, phoneNumber: String? = nil, authToken: String? = nil) async throws  {
+    func createChallenge(email: String? = nil, phoneNumber: String? = nil, authToken: String? = nil) async throws -> String  {
         guard let obConfig = self.onboardingConfig else {
             throw FootprintError(kind: .initializationError, message: "No onboarding config found. Please make sure that the public key is correct.")
         }
@@ -209,9 +223,11 @@ public final class FootprintProvider {
         }
         
         var identifyScope = IdentifyRequest.Scope.onboarding
+        var signupScope = SignupChallengeRequest.Scope.onboarding
         if let obConfigKind = self.onboardingConfig?.kind{
             if obConfigKind == .auth {
                 identifyScope = IdentifyRequest.Scope.auth
+                signupScope = SignupChallengeRequest.Scope.auth
             }
         }
         
@@ -238,11 +254,11 @@ public final class FootprintProvider {
             }
             if hasVerifiedPhone {
                 self.loginChallengeResponse = try await self.queries.getLoginChallenge(kind: .sms, authToken: user.token)
-                return
+                return self.loginChallengeResponse?.challengeData.challengeKind.rawValue ?? ""
             }
             if hasVerifiedEmail {
                 self.loginChallengeResponse = try await self.queries.getLoginChallenge(kind: .email, authToken: user.token)
-                return
+                return self.loginChallengeResponse?.challengeData.challengeKind.rawValue ?? ""
             }
             throw FootprintError(kind: .inlineOtpNotSupported, message: "No verified source found")
         }
@@ -253,18 +269,21 @@ public final class FootprintProvider {
             email: email,
             phoneNumber: phoneNumber,
             kind: preferredAuthMethod,
-            sandboxId: self.sandboxId
+            sandboxId: self.sandboxId,
+            scope: signupScope
         )
+        
+        return self.signupChallengeResponse?.challengeData.challengeKind.rawValue ?? ""
     }
     
     
-    public func createEmailPhoneBasedChallenge(email: String? = nil, phoneNumber: String? = nil) async throws  {
+    public func createEmailPhoneBasedChallenge(email: String? = nil, phoneNumber: String? = nil) async throws -> String {
         if let requiredAuthMethods = self.onboardingConfig?.requiredAuthMethods {
             if requiredAuthMethods.isEmpty {
                 throw FootprintError(kind: .authError, message: "No required auth methods found in the onboarding config")
             }
             if requiredAuthMethods.count > 1 {
-                throw FootprintError(kind: .authError, message: "Multiple auth methods are not supported")
+                throw FootprintError(kind: .inlineOtpNotSupported, message: "Multiple auth methods are not supported")
             }
             if requiredAuthMethods.contains(.phone) && phoneNumber == nil {
                 throw FootprintError(kind: .authError, message: "Phone number is required")
@@ -278,10 +297,11 @@ public final class FootprintProvider {
             throw FootprintError(kind: .authError, message: "You provided an auth token. Please authenticate using it or remove the auth token and authenticate using email/phone number")
         }
         
-        try await createChallenge(email: email, phoneNumber: phoneNumber)
+        let challengeKind = try await createChallenge(email: email, phoneNumber: phoneNumber)
+        return challengeKind
     }
     
-    public func createAuthTokenBasedChallenge() async throws  {
+    public func createAuthTokenBasedChallenge() async throws -> String {
         guard let authToken = self.authToken else {
             throw FootprintError(kind: .authError, message: "No auth token found")
         }
@@ -299,11 +319,13 @@ public final class FootprintProvider {
                 throw FootprintError(kind: .authError, message: "No required auth methods found in the onboarding config")
             }
             if requiredAuthMethods.count > 1 {
-                throw FootprintError(kind: .authError, message: "Multiple auth methods are not supported")
+                throw FootprintError(kind: .inlineOtpNotSupported, message: "Multiple auth methods are not supported")
             }
+            print("Required auth methods: \(requiredAuthMethods)")
         }
         
-        try await createChallenge(authToken: authToken)
+        let challengeKind = try await createChallenge(authToken: authToken)
+        return challengeKind
     }
     
     public func verify(verificationCode: String) async throws -> Verify {
@@ -315,10 +337,15 @@ public final class FootprintProvider {
         guard let obConfigKind = self.onboardingConfig?.kind else {
             throw FootprintError(kind: .initializationError, message: "No onboarding config kind not found. Please make sure that the public key is correct.")
         }
+        var verifyScope = IdentifyVerifyRequest.Scope.onboarding
+        if obConfigKind == .auth {
+            verifyScope = .auth
+        }
         let verifyResponse = try await self.queries.verify(
             challenge: verificationCode,
             challengeToken: challengeToken,
-            authToken: challengeAuthToken
+            authToken: challengeAuthToken,
+            scope: verifyScope
         )
         var validationToken: String = ""
         var updatedAuthToken: String = verifyResponse.authToken
@@ -344,16 +371,37 @@ public final class FootprintProvider {
         return  Verify(requirements: updatedRequirements, validationToken: validationToken, vaultData: updatedVaultData)
     }
     
-    public func getVaultData() async throws -> VaultData {
+    public func getRequirements() async throws -> RequirementAttributes {
+        guard let obConfigKind = self.onboardingConfig?.kind else {
+            throw FootprintError(kind: .initializationError, message: "Missing onboarding configuration kind")
+        }
+        
+        if obConfigKind != .kyc {
+            throw FootprintError(kind: .notAllowed, message: "Unsupported onboarding configuration kind. Only KYC is supported")
+        }
         guard let authToken = self.verifiedAuthToken else {
             throw FootprintError(kind: .authError, message: "Missing authentication token")
         }
-        guard let requirements = self.requirements else {
-            throw FootprintError(kind: .onboardingError, message: "Missing requirements")
+        
+        let requirements = try await self.queries.getOnboardingStatus(authToken: authToken)
+        return requirements
+    }
+    
+    public func getVaultData() async throws -> VaultData {
+        guard let obConfigKind = self.onboardingConfig?.kind else {
+            throw FootprintError(kind: .initializationError, message: "Missing onboarding configuration kind")
         }
         
-        return try await self.queries.decrypt(authToken: authToken,
-                                              fields: requirements.fields.collected + requirements.fields.missing + requirements.fields.optional)
+        if obConfigKind != .kyc {
+            throw FootprintError(kind: .notAllowed, message: "Unsupported onboarding configuration kind. Only KYC is supported")
+        }
+        guard let authToken = self.verifiedAuthToken else {
+            throw FootprintError(kind: .authError, message: "Missing authentication token")
+        }
+        let requirements = try await self.queries.getOnboardingStatus(authToken: authToken)
+        var vaultData = try await self.queries.decrypt(authToken: authToken,
+                                                       fields: requirements.fields.collected + requirements.fields.missing + requirements.fields.optional)
+        return try formatAfterDecryption(vaultData, locale: l10n.locale)
     }
     
     
@@ -370,7 +418,7 @@ public final class FootprintProvider {
             throw FootprintError(kind: .userError, message: "Missing vaulting token")
         }
         
-        try await self.queries.vault(authToken: authToken, vaultData: vaultData)
+        try await self.queries.vault(authToken: authToken, vaultData: formatBeforeSave(vaultData, locale: l10n.locale))
     }
     
     
@@ -394,8 +442,8 @@ public final class FootprintProvider {
     
     
     public func launchIdentify(
-        email: String?,
-        phone: String?,
+        email: String? = nil,
+        phone: String? = nil,
         onCancel: (() -> Void)? = nil,
         onAuthenticated: ((_ result: Verify) -> Void)? = nil,
         onError: ((_ errorMessage: String) -> Void)? = nil
@@ -466,7 +514,7 @@ public final class FootprintProvider {
             onError: onError
         )
         do {
-           try await Footprint.initialize(with: config)
+            try await Footprint.initialize(with: config)
         } catch {
             throw FootprintError(kind: .webviewError, message: "Failed to initialize Footprint webview: \(error.localizedDescription)")
         }
