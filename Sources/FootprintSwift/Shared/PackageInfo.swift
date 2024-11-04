@@ -14,13 +14,13 @@ public final class PackageInfo: NSObject {
         // For the current package/framework
         let frameworkBundle = Bundle(for: PackageInfo.self)
         
-        #if COCOAPODS        
+        #if COCOAPODS
         if var version = frameworkBundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
             return (version, .cocoapods)
         }
         #else
             return (spmVersion, .spm)
-        #endif  
+        #endif
     
         return (nil, .unknown)
     }
