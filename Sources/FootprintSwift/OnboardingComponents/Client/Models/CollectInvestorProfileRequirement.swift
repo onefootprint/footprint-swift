@@ -10,7 +10,7 @@ import Foundation
 public struct CollectInvestorProfileRequirement: Codable, JSONEncodable, Hashable {
 
     public enum Kind: String, Codable, CaseIterable {
-        case investorProfile = "investor_profile"
+        case investorProfile = "collect_investor_profile"
     }
     public enum MissingAttributes: String, Codable, CaseIterable {
         case investorProfile = "investor_profile"
