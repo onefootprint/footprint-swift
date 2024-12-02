@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = 'FootprintSwift'
-    s.version          = '2.2.3-alpha'
+    s.version          = '3.0.0'
     s.summary          = 'FootprintSwift SDK for iOS'
     s.description      = <<-DESC
     Footprint-powered onboarding flows to your application
