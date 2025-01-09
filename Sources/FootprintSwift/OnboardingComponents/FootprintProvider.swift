@@ -472,7 +472,7 @@ public final class FootprintProvider {
         // to handle the step-up case
         requirements = try await self.queries.getOnboardingStatus(authToken: authToken)
         
-        if( RequirementAttributes.hasUnmetRequirement(requirements: requirements) == true ){            
+        if( RequirementAttributes.hasUnmetRequirement(requirements: requirements) == true ){
             throw FootprintError(kind: .inlineProcessNotSupported, message: "Requirements not met. Please complete all the other requirements before process or call handoff")
         }
         
@@ -537,7 +537,7 @@ public final class FootprintProvider {
         
         let config = FootprintConfiguration(
             publicKey: self.configKey,
-            authToken:  authToken,
+            authToken:  authToken,        
             sandboxId: self.sandboxId,
             sessionId: self.sessionId,
             sandboxOutcome: self.sandboxOutcome,
