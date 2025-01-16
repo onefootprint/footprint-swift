@@ -144,6 +144,7 @@ class FootprintAuthSessionManager: NSObject, ASWebAuthenticationPresentationCont
         
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = scene.windows.first else {
+            self.logger?.logError(error: FootprintHostedError(kind: .presentationError , message: "no window available"))
             fatalError("@onefootprint/footprint-swift: no window available.")
         }
         return window

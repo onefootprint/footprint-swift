@@ -22,7 +22,7 @@ public struct FootprintConfiguration: Encodable {
     public init(publicKey: String? = nil,
                 authToken: String? = nil,
                 sandboxId: String? = nil,
-                sessionId: String? = nil,
+                sessionId: String? = UUID().uuidString.lowercased(),
                 sandboxOutcome: SandboxOutcome? = nil,
                 scheme: String,
                 bootstrapData: FootprintBootstrapData? = nil,
