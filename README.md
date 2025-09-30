@@ -1,3 +1,5 @@
+> ⚠️ **THIS SDK IS NOT MAINTAINED ANYMORE. PLEASE USE [THIS](https://github.com/onefootprint/Swift-Onboarding-Components) SDK.**
+
 # FootprintSwift
 
 ## Requirements
